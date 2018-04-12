@@ -38,9 +38,9 @@
 
     <valle-input
       type="search"
-      tabindex="-1"
+      role="search"
       aria-labelledby="label"
-      placeholder="Pesquisar"
+      placeholder=[[placeholder]]
       id="searchInput"
       class="search-input">
     </valle-input>
@@ -61,6 +61,8 @@
     class valleInputSearch extends Polymer.Element {
       ready() {
         super.ready();
+
+
         const inputSearch = this.$.searchInput.shadowRoot.getElementById('input');
 
         inputSearch.style.borderBottom = "none";
@@ -70,6 +72,18 @@
         inputSearch.style.position = "absolute";
         inputSearch.style.left = "42px";
         inputSearch.style.top = "-18px";
+        this.addEventListener('keydown', this._eraseField);
+      }
+
+      _eraseField(e) {
+        const inputSearch = this.$.searchInput.shadowRoot.getElementById('input');
+        const pressEsc = e.wich == 27 || e.keyCode == 27;
+        const pressDel = e.wich == 46 || e.keyCode == 46;
+
+        if (pressEsc || pressDel) {
+          e.preventDefault();
+          inputSearch.value = ' ';
+        }
       }
 
       static get is() { return 'valle-input-search'; }
@@ -79,7 +93,8 @@
           type: {
             type: String,
             value: 'search'
-          }
+          },
+          placeholder: String
         };
       }
 
