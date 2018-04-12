@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="bower_components/valle-input/valle-input.html">
+<link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="../valle-input/valle-input.html">
 
 <dom-module id="valle-input-search">
   <template>
@@ -58,6 +59,7 @@
     <svg
       width="24"
       height="24"
+      id="searchIcon"
       class="search-icon"
       viewBox="0 0 24 24"
       fill="#909090">
@@ -68,12 +70,12 @@
   </template>
 
   <script>
-    class valleInputSearch extends Polymer.Element {
+    class valleInputSearch extends Polymer.GestureEventListeners(Polymer.Element) {
       ready() {
         super.ready();
-
-
         const inputSearch = this.$.searchInput.shadowRoot.getElementById('input');
+        const iconSearch  = this.$.searchIcon;
+        const sizeWidth500 = window.matchMedia("(max-width: 500px)");
 
         inputSearch.style.borderBottom = "none";
         inputSearch.style.backgroundColor = "transparent";
@@ -82,7 +84,16 @@
         inputSearch.style.position = "absolute";
         inputSearch.style.left = "42px";
         inputSearch.style.top = "-18px";
+
+        if (sizeWidth500.matches) {
+          iconSearch.addEventListener('click', this._openSearchField);
+        }
+
         this.addEventListener('keydown', this._eraseField);
+      }
+
+      _openSearchField() {
+        console.log('Olá');
       }
 
       _eraseField(e) {
