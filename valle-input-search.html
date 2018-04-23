@@ -49,12 +49,24 @@
         -webkit-box-shadow: 2px 5px 10px -3px rgba(0,0,0,0.35);
         -moz-box-shadow: 2px 5px 10px -3px rgba(0,0,0,0.35);
       }
+      
+      .valle-input--mobile {
+        display: block;
+        border: 1px solid #e8e8e8;
+        border-radius: var(--curva-borda, 5px);
+        font-size: 18px;
+        height: 50px;
+        position: relative;
+        box-shadow: 2px 5px 10px -3px rgba(0,0,0,0.35);
+        -webkit-box-shadow: 2px 5px 10px -3px rgba(0,0,0,0.35);
+        -moz-box-shadow: 2px 5px 10px -3px rgba(0,0,0,0.35);
+      }
 
       @media screen and (max-width: 500px) {
         .search-input {
           display: none;
         }
-
+        
         .search-icon {
           position: relative;
           top: 0;
@@ -64,6 +76,23 @@
 
         .search-button {
           display: none;
+        }
+
+        .search-button--mobile-open {
+          padding: 0;
+          margin: 0;
+          border: none;
+          box-shadow: none;
+          background-color: transparent;
+          border-radius: 0;
+          position: absolute;
+          top: 1em;
+          right: 1em;
+          z-index: 5;
+        }
+
+        .search-button--mobile-open svg {
+          fill: #909090;
         }
       }
     </style>
@@ -102,18 +131,20 @@
         super.ready();
         const inputSearch = this.$.searchInput.shadowRoot.getElementById('input');
         const iconSearch = this.$.searchIcon;
-        const searchButton = this.$.searchButton;
-        const sizeWidth500 = window.matchMedia("(max-width: 500px)");
+        const sizeDownWidth500 = window.matchMedia("(max-width: 500px)");
+        const sizeAboveWidth500 = window.matchMedia("(min-width: 501px)");
 
-        inputSearch.style.borderBottom = "none";
-        inputSearch.style.backgroundColor = "transparent";
-        inputSearch.style.color = "#909090";
-        inputSearch.style.fontSize = "16px";
-        inputSearch.style.position = "absolute";
-        inputSearch.style.left = "42px";
-        inputSearch.style.top = "-18px";
+        if (sizeAboveWidth500.matches) {
+          inputSearch.style.borderBottom = "none";
+          inputSearch.style.backgroundColor = "transparent";
+          inputSearch.style.color = "#909090";
+          inputSearch.style.fontSize = "16px";
+          inputSearch.style.position = "absolute";
+          inputSearch.style.left = "42px";
+          inputSearch.style.top = "-18px";
+        }
 
-        if (sizeWidth500.matches) {
+        if (sizeDownWidth500.matches) {
           iconSearch.addEventListener('click', this._openSearchField.bind(this));
         }
 
@@ -122,13 +153,29 @@
 
       _openSearchField() {
         const inputSearch = this.$.searchInput.shadowRoot.getElementById('input');
-        console.log(inputSearch);
-        inputSearch.style.display = "block";
-        inputSearch.style.zIndex = "4";
+        const buttonSearch = this.$.searchButton;
+        const valleInputSearch = this.$.searchInput;
+        const iconSearch = this.$.searchIcon;
+        
+        valleInputSearch.classList.add('valle-input--mobile');
+        valleInputSearch.classList.remove('search-input');
+        buttonSearch.classList.remove('search-button');
+        buttonSearch.classList.add('search-button--mobile-open');
+        inputSearch.classList.remove('input');
+        
+        iconSearch.style.display = "none";
+
+        inputSearch.style.border = "none";
+        inputSearch.style.borderRadius = "5px"
+        inputSearch.style.fontSize = "17px";        
+        inputSearch.style.outline = "none";
+        inputSearch.style.height = "100%";
+        inputSearch.style.textIndent = "1.4em";
         inputSearch.style.position = "absolute";
-        inputSearch.style.height = "80px";
-        inputSearch.style.boxShadow = "2px 5px 10px -3px rgba(0,0,0,0.35)";
-        inputSearch.style.width = "80%";
+        inputSearch.style.width = "100%";
+      
+        console.log(inputSearch);
+        console.log(valleInputSearch);
       }
 
       _eraseField(e) {
@@ -153,7 +200,6 @@
           placeholder: String
         };
       }
-
     }
 
     window.customElements.define(valleInputSearch.is, valleInputSearch);
