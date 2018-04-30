@@ -49,6 +49,10 @@
         -webkit-box-shadow: 2px 5px 10px -3px rgba(0,0,0,0.35);
         -moz-box-shadow: 2px 5px 10px -3px rgba(0,0,0,0.35);
       }
+
+      .search-button svg {
+        fill: #ffffff;
+      }
       
       .valle-input--mobile {
         display: block;
@@ -86,7 +90,7 @@
           background-color: transparent;
           border-radius: 0;
           position: absolute;
-          top: 1em;
+          top: 1.1em;
           right: 1em;
           z-index: 5;
         }
@@ -98,7 +102,7 @@
     </style>
 
     <valle-input
-      type="search"
+      type="text"
       role="search"
       aria-labelledby="label"
       placeholder=[[placeholder]]
@@ -119,7 +123,7 @@
 
     <button class="search-button" id="searchButton">
       <svg class="arrow-icon" style="width:24px;height:24px" viewBox="0 0 24 24">
-          <path fill="#ffffff" d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z" />
+          <path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z" />
       </svg>
     </button>
     <slot></slot>
@@ -148,7 +152,7 @@
           iconSearch.addEventListener('click', this._openSearchField.bind(this));
         }
 
-        this.addEventListener('click', this._eraseField);
+        this.addEventListener('keydown', this._eraseField);        
       }
 
       _openSearchField() {
@@ -164,26 +168,22 @@
         inputSearch.classList.remove('input');
         
         iconSearch.style.display = "none";
-
         inputSearch.style.border = "none";
         inputSearch.style.borderRadius = "5px"
+        inputSearch.style.color = "#909090";
         inputSearch.style.fontSize = "17px";        
         inputSearch.style.outline = "none";
         inputSearch.style.height = "100%";
-        inputSearch.style.textIndent = "1.4em";
+        inputSearch.style.textIndent = "1.8em";
         inputSearch.style.position = "absolute";
         inputSearch.style.width = "100%";
-      
-        console.log(inputSearch);
-        console.log(valleInputSearch);
       }
 
       _eraseField(e) {
         const inputSearch = this.$.searchInput.shadowRoot.getElementById('input');
         const pressEsc = e.wich == 27 || e.keyCode == 27;
-        const pressDel = e.wich == 46 || e.keyCode == 46;
-
-        if (pressEsc || pressDel) {
+        
+        if (pressEsc) {
           e.preventDefault();
           inputSearch.value = ' ';
         }
@@ -193,10 +193,6 @@
 
       static get properties() {
         return {
-          type: {
-            type: String,
-            value: 'search'
-          },
           placeholder: String
         };
       }
